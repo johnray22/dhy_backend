@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.VotesDao">
+
+    <!-- Base Column List for general query -->
+    <sql id="Base_Column_List">
+        v.id AS id,
+        v.type AS type,
+        v.title AS title,
+        v.option1 AS option1,
+        v.option1_num AS option1Num,
+        v.option2 AS option2,
+        v.option2_num AS option2Num,
+        v.option3 AS option3,
+        v.option3_num AS option3Num,
+        v.option4 AS option4,
+        v.option4_num AS option4Num,
+        v.username AS username,
+        v.timestamp AS timestamp
+    </sql>
+
+    <!-- Select List View Query -->
+    <select id="selectListView" resultType="com.entity.VotesEntity">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        votes v
+        ORDER BY v.timestamp DESC
+    </select>
+
+</mapper>

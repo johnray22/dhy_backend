@@ -10,6 +10,7 @@ import com.entity.XueshengEntity;
 import com.entity.view.HuidaView;
 import com.entity.view.LaoshiView;
 import com.service.DictionaryService;
+import com.service.VotesHistoryService;
 import com.service.VotesService;
 import com.utils.PageUtils;
 import com.utils.R;
@@ -38,6 +39,8 @@ public class VotesController {
 
     @Autowired
     private VotesService votesService;
+    @Autowired
+    private VotesHistoryService votesHistoryService;
     @Autowired
     private DictionaryService dictionaryService;
 
@@ -76,8 +79,16 @@ public class VotesController {
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<R> vote(@RequestBody VoteRequest voteRequest) {
+    public R vote(@RequestBody VoteRequest voteRequest, HttpServletRequest request) {
         try {
+            // 获取当前用户 ID
+            int userId = (int) request.getSession().getAttribute("userId");
+
+            // 检查用户是否已经投过票
+            if (votesHistoryService.hasVoted(userId, voteRequest.getVoteId())) {
+                return R.error(511,"您已经投过票了");
+            }
+
             Wrapper<VotesEntity> queryWrapper = new EntityWrapper<VotesEntity>()
                     .eq("id", voteRequest.getVoteId());
 
@@ -97,12 +108,17 @@ public class VotesController {
                     vote.setOption4Num(vote.getOption4Num() + 1);
                     break;
                 default:
-                    return ResponseEntity.badRequest().body(new R("无效的选项"));
+                    return R.error(511,"invalid");
             }
             votesService.updateById(vote);
-            return ResponseEntity.ok(new R("投票成功"));
+            logger.info("****************************************************");
+            votesHistoryService.recordVote(userId, voteRequest.getVoteId());
+            logger.info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+            return R.ok("投票成功");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new R("投票过程中发生错误"));
+            e.printStackTrace();
+            return R.error(511,"您已经投过票了");
         }
     }
 }

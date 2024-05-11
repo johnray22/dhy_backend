@@ -1,16 +1,20 @@
 package com.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.dao.JiangchengDao;
 import com.dao.VotesDao;
+import com.dao.VotesHistoryDao;
 import com.entity.JiangchengEntity;
 import com.entity.VotesEntity;
+import com.entity.VotesHistoryEntity;
 import com.entity.view.JiangchengView;
 import com.service.JiangchengService;
 import com.service.VotesService;
 import com.utils.PageUtils;
 import com.utils.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,9 @@ import java.util.Map;
 @Service("VotesService")
 @Transactional
 public class VotesServiceImpl extends ServiceImpl<VotesDao, VotesEntity> implements VotesService {
+
+    @Autowired
+    private VotesHistoryDao voteHistoryDao;
     @Override
     public boolean addVote(VotesEntity vote) {
         if (vote == null || !vote.getType().equals("vote")) {
@@ -65,4 +72,6 @@ public class VotesServiceImpl extends ServiceImpl<VotesDao, VotesEntity> impleme
         page.setRecords(baseMapper.selectListView(page,params));
         return new PageUtils(page);
     }
+
+
 }

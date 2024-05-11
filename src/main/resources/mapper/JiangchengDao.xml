@@ -41,7 +41,7 @@
                     a.xuesheng_id = #{params.xueshengId}
                 )
             </if>
-            <if test=" params.jiangchengName != '' and params.jiangchengName != null and params.jiangchengName != 'null' ">
+            <if test="params.jiangchengName != '' and params.jiangchengName != null and params.jiangchengName != 'null' ">
                 and a.jiangcheng_name like CONCAT('%',#{params.jiangchengName},'%')
             </if>
             <if test="params.jiangchengTypes != null and params.jiangchengTypes != ''">

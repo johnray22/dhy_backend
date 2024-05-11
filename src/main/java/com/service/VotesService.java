@@ -19,4 +19,6 @@ public interface VotesService extends IService<VotesEntity> {
     List<VotesEntity> getAllVotesAndMessages(); // 获取所有投票和留言
 
     PageUtils queryPage(Map<String, Object> params);
+
+
 }
